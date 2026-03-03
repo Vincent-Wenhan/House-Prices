@@ -31,4 +31,6 @@ def preprocess_data(cfg: DictConfig, train_data: pd.DataFrame, test_data: pd.Dat
     train_features = torch.tensor(all_features[:n_tain].values, dtype=torch.float32)
     test_features = torch.tensor(all_features[n_tain:].values, dtype=torch.float32)
     train_labels = torch.tensor(train_data.SalePrice.values, dtype=torch.float32).view(-1, 1)
+    if cfg.preprocess.use_log1p:
+        train_labels = torch.log1p(train_labels)
     return train_features, train_labels, test_features
