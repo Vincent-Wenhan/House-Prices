@@ -1,5 +1,0 @@
-default:
-  - data: data
-  - preprocess: preprocess
-  - model: model
-  - train: train

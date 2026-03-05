@@ -1,3 +1,5 @@
 /.vscode
 /data
 /house-prices-advanced-regression-techniques.zip
+/outputs
+*/__pycache__

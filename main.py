@@ -2,7 +2,7 @@ import hydra
 from omegaconf import DictConfig
 from src.train import train, evaluate, k_fold_cv
 
-@hydra.main(config_path="config", config_name="train")
+@hydra.main(version_base=None, config_path="config", config_name="config")
 def main(cfg: DictConfig):
     if cfg.train.is_kfold and cfg.train.k_folds > 0:
         print(f"Running {cfg.train.k_folds}-fold cross-validation...")

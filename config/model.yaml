@@ -1,0 +1,8 @@
+model:
+  type: "MLP"
+  input_size: 330
+  hidden_sizes: [256, 128, 64]
+  output_size: 1
+  activation: "ReLU"
+  dropout: 0.5
+

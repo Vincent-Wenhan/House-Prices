@@ -25,11 +25,12 @@ def preprocess_data(cfg: DictConfig, train_data: pd.DataFrame, test_data: pd.Dat
 
     # one-hot encode the categorical features
     all_features = pd.get_dummies(all_features, dummy_na=True)
+    all_features = all_features.astype(float)
 
     # split the data back into train and test sets and convert to PyTorch tensors
-    n_tain = train_data.shape[0]
-    train_features = torch.tensor(all_features[:n_tain].values, dtype=torch.float32)
-    test_features = torch.tensor(all_features[n_tain:].values, dtype=torch.float32)
+    n_train = train_data.shape[0]
+    train_features = torch.tensor(all_features[:n_train].values, dtype=torch.float32)
+    test_features = torch.tensor(all_features[n_train:].values, dtype=torch.float32)
     train_labels = torch.tensor(train_data.SalePrice.values, dtype=torch.float32).view(-1, 1)
     if cfg.preprocess.use_log1p:
         train_labels = torch.log1p(train_labels)

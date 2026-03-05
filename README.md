@@ -1,11 +1,7 @@
 # 🏠 House Prices Prediction
 
 This project implements the Kaggle competition:
-
-Using:
-
-* PyTorch
-* Hydra configuration system
+👉 [https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques)
 
 ---
 
@@ -29,7 +25,7 @@ All commands should be executed in the project root directory.
 ## 1️⃣ Run K-Fold Cross Validation
 
 ```bash
-python ./src/main.py training.is_kfold=true training.k_folds=5 training.is_train=false
+python main.py training.is_kfold=true training.k_folds=5 training.is_train=false
 ```
 
 This will:

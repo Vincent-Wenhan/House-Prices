@@ -9,7 +9,7 @@ class MLP(nn.Module):
         input_size = cfg.model.input_size
         for hidden_size in cfg.model.hidden_sizes:
             layers.append(nn.Linear(input_size, hidden_size))
-            layers.append(cfg.model.activation())
+            layers.append(getattr(nn, cfg.model.activation)())
             layers.append(nn.Dropout(cfg.model.dropout))
             input_size = hidden_size
         layers.append(nn.Linear(input_size, cfg.model.output_size))

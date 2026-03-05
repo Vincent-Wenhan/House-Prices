@@ -1,9 +1,0 @@
-optimizer: "Adam"
-learning_rate: 0.001
-batch_size: 64
-loss: "MSELoss"
-num_epochs: 100
-is_kfold: true
-k_folds: 5
-is_train: false
-

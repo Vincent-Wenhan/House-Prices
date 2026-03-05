@@ -5,6 +5,7 @@ import hydra
 from omegaconf import DictConfig
 from src.preprocess import load_data, preprocess_data
 from src.model import MLP
+from src.evaluate import evaluate
 from sklearn.model_selection import KFold
 
 def train(cfg: DictConfig):
@@ -19,7 +20,7 @@ def train(cfg: DictConfig):
     model = MLP(cfg)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
-    optimizer = getattr(torch.optim, cfg.train.optimizer)(model.parameters(), lr=cfg.train.lr)
+    optimizer = getattr(torch.optim, cfg.train.optimizer)(model.parameters(), lr=cfg.train.learning_rate)
     loss_fn = getattr(nn, cfg.train.loss)()
 
     for epoch in range(cfg.train.num_epochs):
@@ -36,30 +37,7 @@ def train(cfg: DictConfig):
         epoch_loss /= len(train_loader.dataset)
         if (epoch + 1) % 10 == 0 or epoch == 0:
             print(f"Epoch {epoch+1}/{cfg.train.num_epochs}, Loss: {epoch_loss:.4f}")
-
-def evaluate(cfg, model, data_loader, device, use_log1p=False, labels=None):
-    model.eval()
-    total_loss = 0
-    y_preds = []
-    loss_fn = getattr(nn, cfg.train.loss)()
-    with torch.no_grad():
-        if labels is not None:
-            for X_batch, y_batch in data_loader:
-                X_batch, y_batch = X_batch.to(device), y_batch.to(device)
-                y_pred = model(X_batch)
-                loss = loss_fn(y_pred, y_batch)
-                total_loss += loss.item() * X_batch.size(0)
-                if use_log1p:
-                    y_pred = torch.expm1(y_pred)
-                y_preds.append(y_pred.cpu().numpy())
-            y_preds = torch.cat(y_preds, dim=0)
-            rmse = ((total_loss / len(labels)) ** 0.5)
-            return y_preds, rmse
-        else:
-            y_preds = model(data_loader.to(device))
-            if use_log1p:
-                y_preds = torch.expm1(y_preds)
-            return y_preds.cpu()
+    return model
 
 def k_fold_cv(cfg: DictConfig):
     "k-fold cross validation"
@@ -77,7 +55,7 @@ def k_fold_cv(cfg: DictConfig):
         model = MLP(cfg)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = model.to(device)
-        optimizer = getattr(torch.optim, cfg.train.optimizer)(model.parameters(), lr=cfg.train.lr)
+        optimizer = getattr(torch.optim, cfg.train.optimizer)(model.parameters(), lr=cfg.train.learning_rate)
         loss_fn = getattr(nn, cfg.train.loss)()
 
         for epoch in range(cfg.train.num_epochs):
