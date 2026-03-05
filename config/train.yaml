@@ -3,7 +3,7 @@ train:
   learning_rate: 0.01
   batch_size: 64
   loss: "MSELoss"
-  num_epochs: 100
+  num_epochs: 300
   is_kfold: false
   k_folds: 5
   is_train: true
