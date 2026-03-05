@@ -3,3 +3,5 @@ defaults:
   - preprocess
   - model
   - train
+
+outdir: ./outputs/submission

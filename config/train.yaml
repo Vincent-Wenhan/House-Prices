@@ -4,6 +4,7 @@ train:
   batch_size: 64
   loss: "MSELoss"
   num_epochs: 100
-  is_kfold: true
+  is_kfold: false
   k_folds: 5
-  is_train: false
+  is_train: true
+  is_predict: true

@@ -8,7 +8,7 @@ from src.model import MLP
 from src.evaluate import evaluate
 from sklearn.model_selection import KFold
 
-def train(cfg: DictConfig):
+def train(cfg: DictConfig, device: torch.device):
     # load and preprocess the data
     train_data, test_data = load_data(cfg)
     train_features, train_labels, test_features = preprocess_data(cfg, train_data, test_data)
@@ -18,7 +18,6 @@ def train(cfg: DictConfig):
 
     # initialize the model, loss function, and optimizer
     model = MLP(cfg)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
     optimizer = getattr(torch.optim, cfg.train.optimizer)(model.parameters(), lr=cfg.train.learning_rate)
     loss_fn = getattr(nn, cfg.train.loss)()
@@ -39,7 +38,7 @@ def train(cfg: DictConfig):
             print(f"Epoch {epoch+1}/{cfg.train.num_epochs}, Loss: {epoch_loss:.4f}")
     return model
 
-def k_fold_cv(cfg: DictConfig):
+def k_fold_cv(cfg: DictConfig, device: torch.device):
     "k-fold cross validation"
     train_data, test_data = load_data(cfg)
     train_features, train_labels, test_features = preprocess_data(cfg, train_data, test_data)
@@ -53,7 +52,6 @@ def k_fold_cv(cfg: DictConfig):
         train_loader = DataLoader(TensorDataset(X_train, y_train), batch_size=cfg.train.batch_size, shuffle=True)
         val_loader = DataLoader(TensorDataset(X_val, y_val), batch_size=cfg.train.batch_size, shuffle=False)
         model = MLP(cfg)
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = model.to(device)
         optimizer = getattr(torch.optim, cfg.train.optimizer)(model.parameters(), lr=cfg.train.learning_rate)
         loss_fn = getattr(nn, cfg.train.loss)()
